@@ -9,10 +9,21 @@ load_dotenv()
 
 app = Flask(__name__)
 
+
+def required_environment_variable(name):
+    value = os.environ.get(name)
+    if not value or not value.strip():
+        raise RuntimeError(
+            f"Missing required configuration: {name}. "
+            "Set a non-empty value in the environment or .env before starting the app."
+        )
+    return value
+
+
 # Cosmos DB configuration
-COSMOS_ENDPOINT = os.environ.get("COSMOS_ENDPOINT", "https://lego-cosmos-db-ugiocc64astx6.documents.azure.com:443/")
-COSMOS_DATABASE = os.environ.get("COSMOS_DATABASE", "LegoDatabase")
-COSMOS_CONTAINER = os.environ.get("COSMOS_CONTAINER", "legoSets")
+COSMOS_ENDPOINT = required_environment_variable("COSMOS_ENDPOINT")
+COSMOS_DATABASE = required_environment_variable("COSMOS_DATABASE")
+COSMOS_CONTAINER = required_environment_variable("COSMOS_CONTAINER")
 
 ITEMS_PER_PAGE = 24
 
